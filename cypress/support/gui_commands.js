@@ -7,12 +7,19 @@ Cypress.Commands.add('login', (
         cy.visit('/users/sign_in')
 
         cy.get("[data-qa-selector='login_field']").type(user)
-        cy.get("[data-qa-selector='password_field']").type(password, { log: false })  // func "{ log: false }" não exibe o login na app
+        cy.get("[data-qa-selector='password_field']").type(password, { log: false }) // este comando { log: false } não exibe o valor durante o teste 
         cy.get("[data-qa-selector='sign_in_button']").click()
+    }
+
+    const validate = () => {
+        cy.visit('/')
+        cy.location('pathname', { timeout: 1000 })
+            .should('not.eq', '/users/sign_in')
     }
 
     const options = {
         cacheAcrossSpecs: true,
+        validate,
     }
 
     if (cacheSession) {
@@ -38,4 +45,12 @@ Cypress.Commands.add('gui_createProject', project => {
     cy.get('#project_description').type(project.description)
     cy.get('.qa-initialize-with-readme-checkbox').check()
     cy.contains('Create project').click()
+})
+
+Cypress.Commands.add('gui_createIssue', issue => {
+    cy.visit(`/${Cypress.env('user_name')}/${issue.project.name}/issues/new`)  //redirecionado diremtamente a page de new issues
+
+    cy.get('#issue_title').type(issue.title)
+    cy.get('#issue_description').type(issue.description)
+    cy.contains('Submit issue').click()
 })
