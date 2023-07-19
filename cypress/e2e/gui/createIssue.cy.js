@@ -1,40 +1,8 @@
-// import { faker } from '@faker-js/faker'
-
-// describe('Create Issue', () => {
-
-//     const issue = {
-//         title: `issue-${faker.datatype.uuid()}`,
-//         description: faker.random.words(3),
-//         project: {
-//           name: `project-${faker.datatype.uuid()}`,
-//           description: faker.random.words(5)
-//         }
-//       }
-
-//     beforeEach(() => {
-//         cy.login()
-//         cy.gui_createProject(issue.project)
-//     })
-
-//     it('successfully', () => {
-//         const issue = {
-//             title: `issue-${faker.datatype.uuid()}`,
-//             description: faker.random.words(5)
-//         }
-
-//         cy.Cypress.Commands.add('gui_createIssue', issue => {
-//             (issue)
-
-//             cy.url().should('be.equal', `${Cypress.config('baseUrl')}/${Cypress.env('user_name')}/${project.name}/issues/new`)
-//             cy.contains(issue.name).should('be.visible')
-//             cy.contains(issue.description).should('be.visible')
-//         })
-//     })
-// })
-
 import { faker } from '@faker-js/faker'
 
-describe('Create Issue', () => {
+const options = { env: { snapshotOnly: true } }
+
+describe('Create Issue', options, () => {
   const issue = {
     title: `issue-${faker.datatype.uuid()}`,
     description: faker.random.words(3),
@@ -45,8 +13,9 @@ describe('Create Issue', () => {
   }
 
   beforeEach(() => {
+    cy.api_deleteProjects()
     cy.login()
-    cy.gui_createProject(issue.project)
+    cy.api_createProject(issue.project)
   })
 
   it('successfully', () => {
